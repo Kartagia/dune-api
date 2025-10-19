@@ -1,4 +1,7 @@
 import express from 'express';
+import { Skills } from './data.ts';
+import { registerResource } from './resource.ts';
+import { Skill } from './sklll.ts';
 
 /**
  * Select integer or a default value.
@@ -24,6 +27,13 @@ const port = intOrElse(process.env.port, 3000)
 app.use(express.json());
 
 // Adding methods from controller. 
+registerResource(app, "/skills", Skills, (values) => {
+    if (Array.isArray(values)) {
+        throw new SyntaxError("Cannot handle more than skill.");
+    } else {
+        return Skill(values["name"], values["description"]);
+    }
+});
 
 // Starting the app.
 const server = app.listen(port, () => {
