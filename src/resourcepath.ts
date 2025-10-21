@@ -57,6 +57,12 @@ export interface ResourcePath {
      * Is the path relative.
      */
     relative?: Readonly<boolean>;
+
+
+    /**
+     * The string representation of the resource path. 
+     */
+    toString(): string;
 }
 
 /**
@@ -92,7 +98,7 @@ export function isRelative(path: ResourcePath | undefined | null): boolean {
  * @param parent The optional path of the parent. @default undefined.
  */
 export function ResourcePath(name: string, parent: ResourcePath | undefined | null = undefined): ResourcePath {
-    if (name === "")
+    if (name === "" && parent !== null)
         throw new SyntaxError("An empty path segment is not allowed");
 
     if (["..", "."].includes(name)) {
@@ -111,7 +117,14 @@ export function ResourcePath(name: string, parent: ResourcePath | undefined | nu
             return resolvePath(this, path);
         },
         absolute: parent == null ? parent === null : parent.absolute,
-        relative: parent == null ? parent === undefined : parent.relative
+        relative: parent == null ? parent === undefined : parent.relative,
+        toString(): string {
+            if (this.parent) {
+                return (this.parent ? this.parent.toString() + "/" : "") + this.name;
+            } else {
+                return (this.parent === undefined ? "" : "/") + this.name;
+            }
+        }
     };
 }
 
@@ -128,6 +141,8 @@ export function resolvePath(current: ResourcePath | null | undefined, path: Reso
     const childPath = (typeof path === "string" ? ResourcePath(path) : path);
     cursor = childPath;
     while (cursor != null) {
+        if (cursor.name === "" && cursor.parent !== null)
+            throw new SyntaxError("Only root of the absolute path may contain emptye segment.");
         pathResources.unshift(cursor.name);
         cursor = cursor.parent;
     }
@@ -136,17 +151,28 @@ export function resolvePath(current: ResourcePath | null | undefined, path: Reso
         let parent = cursor;
         pathResources.forEach((segment, index) => {
             if (segment === ".") {
-                // Do nothing.
+                // Do nothing. 
             } else if (segment === "..") {
-                // Remove most recent path.
-                if (parent == null) {
-                    throw new SyntaxError("Invalid relative path at segment " + index + ".");
+                // Remove most recent path or append relative step back at start of the path.
+                if (parent === undefined) {
+                    parent = ResourcePath("..", parent);
+                } else if (parent === null || parent !== undefined && parent.parent === null && parent.name === "") {
+                    throw new SyntaxError(`Invalid path segment ${index}: Cannot move beyond root.`);
+                } else if (parent !== null && parent.name !== "" && parent.parent === null) {
+                    // An empty root. 
+                    parent = ResourcePath("", parent.parent);
+                } else {
+                    parent = parent.parent;
                 }
-                parent = parent.parent;
             } else if (segment == "") {
                 throw SyntaxError(`Invalid path segment ${index}: An empty segment.`);
             } else if (segment !== ".") {
-                parent = ResourcePath(segment, parent);
+                if (parent != null && parent.name === "") {
+                    // Removing the empty root segment with non-empty root segment.
+                    parent = ResourcePath(segment, parent.parent);
+                } else {
+                    parent = ResourcePath(segment, parent);
+                }
             }
         });
         return parent;
@@ -245,7 +271,7 @@ export interface ResourceMoved<TYPE = string> extends ResourceChange<TYPE> {
  * @returns The promise of the resource change list in the order of change. 
  */
 export function parseJsonResourceChanges<TYPE>(request: Request): Promise<ResourceChange<TYPE>[]> {
-    
+
     return Promise.reject(new Error("The parseJsonResourceChanges not implemented"));
 }
 
@@ -255,13 +281,13 @@ export function parseJsonResourceChanges<TYPE>(request: Request): Promise<Resour
  * @returns The promise of the resource change list in the order of change. 
  */
 export function parseXmlResourceChanges<TYPE>(request: Request): Promise<ResourceChange<TYPE>[]> {
-    
+
     return Promise.reject(new Error("The parseXmlResourceChanges not implemented"));
 }
 
 
 export function parseResourceChanges<TYPE>(request: Request, contentType: string): Promise<ResourceChange<TYPE>[]> {
-    switch(contentType) {
+    switch (contentType) {
         case "application/json":
             return parseJsonResourceChanges(request);
         case "application/xml":
