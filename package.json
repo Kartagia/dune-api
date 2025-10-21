@@ -24,9 +24,9 @@
     "compile": "tsc",
     "check": "echo ${__main}",
     "predev": "npm run compile",
-    "dev": "node --env-file-if-exists=.development.env dist/server.js", 
+    "dev": "node --env-file-if-exists=.development.env dist/server.js",
     "prestart": "npm run compile",
-    "start": "node --env-file-file-if-exists=.production.env dist/server.js", 
+    "start": "node --env-file-file-if-exists=.production.env dist/server.js",
     "pretest": "tsc ",
     "test": "mocha "
   },
@@ -35,6 +35,7 @@
     "@types/node": "^24.8.1"
   },
   "dependencies": {
+    "@xmldom/xmldom": "^0.8.11",
     "express": "^5.1.0"
   }
 }
