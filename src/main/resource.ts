@@ -159,33 +159,33 @@ export function registerResource<TYPE>(app: Application, path: string, resource?
             res.status(405).json({ message: `Unsupported ${resource.name} operation.`, resource: resource.name });
         }
     })
-    /**
-     * Update resource value. 
-     */
-    app.post(path + "/:id", function (req: Request, res: Response) {
-        if (parser) {
-            const id = req.params.id;
-            const body = req.body;
-            parseBody(req, parser).then(
-                async result => {
-                    return resource.update(id, result).then( () => {
-                        console.log(`Updated ${resource.name}: id=${id}, value: ${body}`)
-                        res.status(204).end();
-                    })
-                }
-            ).catch( err => {
-                console.error(err);
-                res.status(400).json({ message: `Invalid ${resource.name}.`, resource: resource.name, value: body });
-            });
-        } else {
-            res.status(405).json({ message: `Unsupported ${resource.name} operation.`, resource: resource.name });
-        }
-    })
+    // /**
+    //  * Update resource value. 
+    //  */
+    // app.post(path + "/:id", function (req: Request, res: Response) {
+    //     if (parser) {
+    //         const id = req.params.id;
+    //         const body = req.body;
+    //         parseBody(req, parser).then(
+    //             async result => {
+    //                 return resource.update(id, result).then( () => {
+    //                     console.log(`Updated ${resource.name}: id=${id}, value: ${body}`)
+    //                     res.status(204).end();
+    //                 })
+    //             }
+    //         ).catch( err => {
+    //             console.error(err);
+    //             res.status(400).json({ message: `Invalid ${resource.name}.`, resource: resource.name, value: body });
+    //         });
+    //     } else {
+    //         res.status(405).json({ message: `Unsupported ${resource.name} operation.`, resource: resource.name });
+    //     }
+    // })
 
     /**
      * Update an existing resource with replacement. 
      */
-    app.put(path + ":id", function (req: Request, res: Response) {
+    app.put(path + "/:id", function (req: Request, res: Response) {
         if (parser) {
             const id = req.params.id;
             const body = req.body;
