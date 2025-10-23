@@ -1,6 +1,7 @@
 
 /**
  * An interface representing a skill. 
+ * @deprecated Moved to src/main
  */
 export interface Skill {
     name: string,
@@ -13,6 +14,7 @@ export interface Skill {
  * @param description The description of the skill. 
  * @returns A skill.
  * @throws {SyntaxError} The name or the description is invalid. 
+ * @deprecated Moved to src/main
  */
 export function Skill(name: string, description: string | undefined = undefined): Skill {
     return {
