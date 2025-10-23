@@ -5,7 +5,7 @@
  */
 
 import type { Resource } from "./resource.ts";
-import { Skill } from "./sklll.js";
+import { Skill } from "./sklll.ts";
 import { randomUUID } from "crypto";
 
 var data = {
@@ -15,6 +15,9 @@ var data = {
     ])
 }
 
+/**
+ * The skills resource using in memory map as its implementation.
+ */
 export const Skills: Resource<Skill> = {
     name: "skill",
     getAll: function (): Promise<readonly [string, Skill][]> {
