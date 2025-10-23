@@ -1,0 +1,7 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOPtions": {
+        "module": "esnext",
+        "outDir": "release"
+    }
+}
