@@ -19,14 +19,14 @@
   "license": "MIT",
   "author": "Antti Kautiainen",
   "type": "module",
-  "main": "dist/server.js",
+  "main": "dist/main/server.js",
   "scripts": {
     "compile": "tsc",
     "check": "echo ${__main}",
     "predev": "npm run compile",
-    "dev": "node --env-file-if-exists=.development.env dist/server.js", 
+    "dev": "node --env-file-if-exists=.development.env dist/main/server.js", 
     "prestart": "npm run compile",
-    "start": "node --env-file-file-if-exists=.production.env dist/server.js", 
+    "start": "node --env-file-file-if-exists=.production.env dist/main/server.js", 
     "pretest": "tsc ",
     "test": "mocha "
   },

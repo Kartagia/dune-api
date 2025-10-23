@@ -36,7 +36,7 @@ registerResource(app, "/skills", Skills, (values) => {
 });
 
 // Starting the app.
-const server = app.listen(port, () => {
+app.listen(port, () => {
     console.log(`Dune server running at port ${port}`);
 });
 
