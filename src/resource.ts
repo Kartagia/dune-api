@@ -1,5 +1,4 @@
 import type { Application, Request, Response } from "express";
-import { resourceLimits } from "worker_threads";
 
 
 /**
@@ -7,6 +6,7 @@ import { resourceLimits } from "worker_threads";
  * 
  * @template TYPE The type of the resource values.
  * @template [KEY=string] The type of the resource keys.
+ * @deprecated Moved to main
  */
 export interface Resource<
     TYPE,
@@ -67,6 +67,7 @@ export interface Resource<
  * @param source The parsed value. 
  * @returns The parse result.
  * @throws {SyntaxError} The source is not a valid source.
+ * @deprecated Moved to main
  */
 export type Parser<TYPE, SOURCE = any> = (source: SOURCE) => TYPE;
 
@@ -80,6 +81,7 @@ export type Parser<TYPE, SOURCE = any> = (source: SOURCE) => TYPE;
  * @param source The parsed value. 
  * @returns The promise of the parsed value.
  * @throws {SyntaxError} The rejected value, if the parse failed. 
+ * @deprecated Moved to main
  */
 export type AsyncParser<TYPE, SOURCE = any> = (source: SOURCE) => Promise<TYPE>;
 
@@ -88,6 +90,7 @@ export type AsyncParser<TYPE, SOURCE = any> = (source: SOURCE) => Promise<TYPE>;
  * @param request The request, whose body is parsed.
  * @param parser The parser function.
  * @returns The promsie of the result, or rejection indicating the error.
+ * @deprecated Moved to main
  */
 export function parseBody<TYPE>(request: Request, parser: Parser<TYPE>|AsyncParser<TYPE>): Promise<TYPE> {
     return new Promise<TYPE>( (resolve, reject) => {
@@ -105,6 +108,7 @@ export function parseBody<TYPE>(request: Request, parser: Parser<TYPE>|AsyncPars
  * @param path The base path of the resource. 
  * @param resource The resource declaratoin.
  * @param parser The optional parser used to parse JSON body. If undefined, the create and update are not allowed.
+ * @deprecated Moved to main
  */
 export function registerResource<TYPE>(app: Application, path: string, resource?: Resource<TYPE>,
     parser: (value: Record<string, any>) => TYPE = undefined) {
